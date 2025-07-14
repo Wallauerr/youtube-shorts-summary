@@ -29,5 +29,5 @@
 		"noFallthroughCasesInSwitch": true,
 		"noUncheckedSideEffectImports": true
 	},
-	"include": ["src", "api", "types"]
+	"include": ["src", "src/api", "types"]
 }
