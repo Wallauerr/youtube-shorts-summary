@@ -9,7 +9,7 @@ interface YtdlInfo {
 	formats: YtdlFormat[];
 }
 
-export const download = (videoId: string) =>
+export const downloadVideo = (videoId: string) =>
 	new Promise<void>((resolve, reject) => {
 		const videoURL = "https://www.youtube.com/shorts/" + videoId;
 		console.log("Realizando o download do vídeo:", videoId);
