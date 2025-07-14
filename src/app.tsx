@@ -1,5 +1,4 @@
 import { Play } from "lucide-react";
-import type React from "react";
 import { useState } from "react";
 
 interface SummaryState {
@@ -16,9 +15,7 @@ export default function App() {
 		isLoading: false,
 	});
 
-	const handleSubmit = async (e?: React.MouseEvent | React.KeyboardEvent) => {
-		e?.preventDefault();
-
+	const handleSubmit = async () => {
 		if (!url.trim()) return;
 
 		setSummary({
@@ -36,7 +33,7 @@ export default function App() {
 				isPlaceholder: false,
 				isLoading: false,
 			});
-		} catch (error) {
+		} catch {
 			setSummary({
 				content: "Erro ao processar o vídeo. Tente novamente.",
 				isPlaceholder: false,
@@ -46,9 +43,13 @@ export default function App() {
 	};
 
 	const isValidUrl = (urlString: string): boolean => {
+		if (!urlString) return false;
 		try {
-			new URL(urlString);
-			return true;
+			const url = new URL(urlString);
+			return (
+				url.hostname.includes("youtube.com") ||
+				url.hostname.includes("youtu.be")
+			);
 		} catch {
 			return false;
 		}
