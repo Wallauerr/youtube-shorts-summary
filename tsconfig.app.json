@@ -11,7 +11,6 @@
 		"paths": {
 			"@/*": ["./src/*"]
 		},
-		"typeRoots": ["./types", "./node_modules/@types"],
 
 		/* Bundler mode */
 		"moduleResolution": "bundler",
@@ -29,5 +28,5 @@
 		"noFallthroughCasesInSwitch": true,
 		"noUncheckedSideEffectImports": true
 	},
-	"include": ["src", "src/api", "types"]
+	"include": ["src", "server"]
 }
