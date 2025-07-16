@@ -1,10 +1,12 @@
 import { Play } from "lucide-react";
 import { useState } from "react";
+import { downloadVideo, summarizeText, transcribeAudio } from "./api";
 
 interface SummaryState {
 	content: string;
 	isPlaceholder: boolean;
 	isLoading: boolean;
+	error?: string;
 }
 
 export default function App() {
@@ -15,29 +17,81 @@ export default function App() {
 		isLoading: false,
 	});
 
+	const extractVideoId = (url: string): string | null => {
+		try {
+			const urlObj = new URL(url);
+
+			// Check for shorts URLs first (works for both youtube.com and youtu.be)
+			if (urlObj.pathname.includes("/shorts/")) {
+				return urlObj.pathname.split("/shorts/")[1];
+			}
+
+			// Regular YouTube URLs
+			if (urlObj.hostname.includes("youtube.com")) {
+				return urlObj.searchParams.get("v");
+			}
+
+			// Short youtu.be URLs
+			if (urlObj.hostname.includes("youtu.be")) {
+				return urlObj.pathname.slice(1);
+			}
+		} catch {
+			return null;
+		}
+		return null;
+	};
+
 	const handleSubmit = async () => {
 		if (!url.trim()) return;
 
+		const videoId = extractVideoId(url);
+		if (!videoId) {
+			setSummary({
+				content: "URL inválida. Por favor, insira uma URL válida do YouTube.",
+				isPlaceholder: false,
+				isLoading: false,
+				error: "invalid_url",
+			});
+			return;
+		}
+
 		setSummary({
-			content: "Carregando resumo...",
+			content: "Iniciando processamento...",
 			isPlaceholder: false,
 			isLoading: true,
 		});
 
 		try {
-			await new Promise((resolve) => setTimeout(resolve, 2000));
+			setSummary((prev) => ({
+				...prev,
+				content: "Fazendo download do vídeo...",
+			}));
+			await downloadVideo(videoId);
+
+			setSummary((prev) => ({
+				...prev,
+				content: "Convertendo vídeo para áudio...",
+			}));
+
+			setSummary((prev) => ({ ...prev, content: "Transcrevendo o áudio..." }));
+			const transcription = await transcribeAudio();
+
+			setSummary((prev) => ({ ...prev, content: "Gerando resumo..." }));
+			const finalSummary = await summarizeText(transcription);
 
 			setSummary({
-				content:
-					"Este é um resumo de exemplo do vídeo. Aqui você teria o conteúdo real processado pelo seu backend. O resumo incluiria os principais pontos abordados no vídeo, organizados de forma clara e concisa para facilitar a compreensão do usuário.",
+				content: finalSummary,
 				isPlaceholder: false,
 				isLoading: false,
 			});
-		} catch {
+		} catch (error) {
+			console.error("Erro no processamento:", error);
 			setSummary({
-				content: "Erro ao processar o vídeo. Tente novamente.",
+				content:
+					"Erro ao processar o vídeo. Verifique se a URL está correta e se o vídeo tem menos de 60 segundos.",
 				isPlaceholder: false,
 				isLoading: false,
+				error: "processing_error",
 			});
 		}
 	};
@@ -46,10 +100,14 @@ export default function App() {
 		if (!urlString) return false;
 		try {
 			const url = new URL(urlString);
-			return (
+			const isYouTubeHost =
 				url.hostname.includes("youtube.com") ||
-				url.hostname.includes("youtu.be")
-			);
+				url.hostname.includes("youtu.be");
+			const isShorts = url.pathname.includes("/shorts/");
+			const hasVideoId =
+				!!url.searchParams.get("v") || !!url.pathname.slice(1) || isShorts;
+
+			return isYouTubeHost && !!hasVideoId;
 		} catch {
 			return false;
 		}
