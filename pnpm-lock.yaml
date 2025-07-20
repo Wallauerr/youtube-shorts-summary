@@ -27,15 +27,9 @@ importers:
       '@eslint/js':
         specifier: ^9.29.0
         version: 9.30.1
-      '@types/fluent-ffmpeg':
-        specifier: ^2.1.21
-        version: 2.1.27
       '@types/node':
         specifier: ^24.0.10
         version: 24.0.10
-      '@types/node-wav':
-        specifier: ^0.0.2
-        version: 0.0.2
       '@types/react':
         specifier: ^19.1.8
         version: 19.1.8
@@ -605,14 +599,8 @@ packages:
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
 
-  '@types/fluent-ffmpeg@2.1.27':
-    resolution: {integrity: sha512-QiDWjihpUhriISNoBi2hJBRUUmoj/BMTYcfz+F+ZM9hHWBYABFAE6hjP/TbCZC0GWwlpa3FzvHH9RzFeRusZ7A==}
-
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
-
-  '@types/node-wav@0.0.2':
-    resolution: {integrity: sha512-FtCgm0Naki3K/woBa3SklmtabMBqWsqv9Vl63LOqOtGQmAYfQ+zgB10QaNtZRt6PkPGL6atTkbCJu55sJCQiuQ==}
 
   '@types/node@24.0.10':
     resolution: {integrity: sha512-ENHwaH+JIRTDIEEbDK6QSQntAYGtbvdDXnMXnZaZ6k13Du1dPMmprkEHIL7ok2Wl2aZevetwTAb5S+7yIF+enA==}
@@ -1787,15 +1775,7 @@ snapshots:
 
   '@types/estree@1.0.8': {}
 
-  '@types/fluent-ffmpeg@2.1.27':
-    dependencies:
-      '@types/node': 24.0.10
-
   '@types/json-schema@7.0.15': {}
-
-  '@types/node-wav@0.0.2':
-    dependencies:
-      '@types/node': 24.0.10
 
   '@types/node@24.0.10':
     dependencies:
