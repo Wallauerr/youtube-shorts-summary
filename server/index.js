@@ -26,34 +26,15 @@ app.get("/api/health", (_, res) => {
 	res.json({ status: "Server is running!", port: PORT });
 });
 
-// Rota para download e transcrição
-app.get("/api/summary/:id", async (request, response) => {
-	try {
-		console.log("🎬 Iniciando processamento completo do vídeo:", request.params.id);
-
-		console.log("📥 Etapa 1: Download do vídeo...");
-		await download(request.params.id);
-
-		console.log("🔄 Etapa 2: Conversão de áudio...");
-		const audioConverted = await convert();
-
-		console.log("🎤 Etapa 3: Transcrição...");
-		const result = await transcribe(audioConverted);
-
-		console.log("✅ Processamento completo finalizado com sucesso!");
-		return response.json({ result });
-	} catch (error) {
-		console.error("❌ Erro no processamento completo:", error.message);
-		console.error("📋 Stack trace:", error.stack);
-		return response.json({ error: error.message });
-	}
-});
-
 // Rota para resumo
 app.post("/api/summary", async (request, response) => {
 	try {
 		console.log("📝 Requisição de resumo recebida");
-		console.log("📄 Tamanho do texto:", request.body.text ? request.body.text.length : 0, "caracteres");
+		console.log(
+			"📄 Tamanho do texto:",
+			request.body.text ? request.body.text.length : 0,
+			"caracteres",
+		);
 
 		const result = await summarize(request.body.text);
 
@@ -66,11 +47,14 @@ app.post("/api/summary", async (request, response) => {
 	}
 });
 
-// Rota para download (nova)
+// Rota para download
 app.post("/api/download", async (request, response) => {
 	try {
 		console.log("📥 Requisição de download recebida");
-		console.log("📋 Body da requisição:", JSON.stringify(request.body, null, 2));
+		console.log(
+			"📋 Body da requisição:",
+			JSON.stringify(request.body, null, 2),
+		);
 
 		const { videoId } = request.body;
 		if (!videoId) {
@@ -90,7 +74,7 @@ app.post("/api/download", async (request, response) => {
 	}
 });
 
-// Rota para transcrição (nova)
+// Rota para transcrição
 app.post("/api/transcribe", async (_, response) => {
 	try {
 		console.log("🎤 Requisição de transcrição recebida");
@@ -118,6 +102,9 @@ app.listen(PORT, () => {
 	console.log(`🚀 Health: http://localhost:${PORT}/api/health`);
 	console.log("🚀 =================================");
 	console.log("🎭 MODO: Simulação/Mock ativo");
-	console.log("📁 Diretório tmp:", fs.existsSync("./tmp") ? "✅ Existe" : "❌ Não existe");
+	console.log(
+		"📁 Diretório tmp:",
+		fs.existsSync("./tmp") ? "✅ Existe" : "❌ Não existe",
+	);
 	console.log("🚀 Servidor pronto para receber requisições!");
 });
